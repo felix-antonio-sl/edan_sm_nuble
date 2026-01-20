@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}EDAN Salud Mental{% endblock %} | GORE Ñuble</title>
+    <meta
+      name="description"
+      content="Evaluación de Daños y Análisis de Necesidades en Salud Mental - Región de Ñuble"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/wizard.css') }}"
+    />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Header institucional -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-logos">
+          <div class="logo-gore">
+            <span class="logo-text">GORE</span>
+            <span class="logo-region">ÑUBLE</span>
+          </div>
+          <div class="header-divider"></div>
+          <div class="logo-ss">
+            <span class="logo-text-sm">Servicio de Salud</span>
+            <span class="logo-region-sm">Ñuble</span>
+          </div>
+        </div>
+        <div class="header-context">
+          <span class="context-badge">🔥 Emergencia Incendios 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message flash-{{ category }}">
+        {{ message }}
+        <button class="flash-close" onclick="this.parentElement.remove()">
+          ×
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <!-- Contenido principal -->
+    <main class="main-content">{% block content %}{% endblock %}</main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <p class="footer-text">
+          Colaboración <strong>Gobierno Regional de Ñuble</strong> y
+          <strong>Servicio de Salud Ñuble</strong>
+        </p>
+        <p class="footer-context">Contexto: Incendios Región de Ñuble 2026</p>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/wizard.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

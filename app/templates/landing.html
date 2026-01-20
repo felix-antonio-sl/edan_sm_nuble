@@ -1,0 +1,110 @@
+{% extends "base.html" %} {% block title %}Hub de Emergencia - Región de Ñuble{%
+endblock %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/landing.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="landing-container">
+  <!-- Hero Section -->
+  <section class="landing-hero red-alert-gradient">
+    <div class="hero-header">
+      <div class="live-indicator">
+        <span class="pulse-dot"></span>
+        ALERTA ROJA REGIONAL
+      </div>
+      <div class="hero-date" id="currentDate">12 de Marxo, 2026</div>
+    </div>
+
+    <div class="hero-main-text">
+      <h1>Respuesta Incendios Forestales 2026</h1>
+      <p>Centro de Mando Digital - Gobierno Regional de Ñuble</p>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-badge">
+        <span class="stat-icon">🔥</span>
+        <span class="stat-info"><strong>Estado:</strong> Activo</span>
+      </div>
+      <div class="stat-badge warning">
+        <span class="stat-icon">⚠️</span>
+        <span class="stat-info"><strong>Despliegue:</strong> Máximo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Instrumentation Panel -->
+  <section class="instrument-panel">
+    <div class="panel-card glass-effect">
+      <div class="card-header-landing">
+        <h2>Instrumentos de Campo</h2>
+        <span class="subtitle"
+          >Herramientas digitales para respuesta en terreno</span
+        >
+      </div>
+
+      <div class="app-grid">
+        <!-- EDAN Card -->
+        <div class="app-card featured">
+          <div class="app-icon">🧠</div>
+          <div class="app-details">
+            <h3>EDAN Salud Mental</h3>
+            <p>Evaluación de Daños y Análisis de Necesidades</p>
+            <div class="app-tags">
+              <span class="tag">Prioridad Alta</span>
+              <span class="tag">SSÑ</span>
+            </div>
+          </div>
+          <div class="app-action">
+            <a href="{{ url_for('formulario.index') }}" class="btn-access">
+              Ingreso Funcionarios
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Placeholder for future apps -->
+        <div class="app-card disabled">
+          <div class="app-icon">📝</div>
+          <div class="app-details">
+            <h3>Ficha Básica de Emergencia</h3>
+            <p>Próximamente digitalizado</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Institutional Footer Logos -->
+  <section class="institutional-bar">
+    <div class="logo-group">
+      <img
+        src="{{ url_for('static', filename='img/gore_logo.png') }}"
+        alt="Gobierno Regional de Ñuble"
+        class="partner-logo gore"
+      />
+      <div class="divider"></div>
+      <img
+        src="{{ url_for('static', filename='img/ssn_logo.jpg') }}"
+        alt="Servicio de Salud Ñuble"
+        class="partner-logo ssn"
+      />
+    </div>
+    <p class="system-coord">Coordinación Regional de Emergencias</p>
+  </section>
+</div>
+
+<script>
+  // Simple date update
+  const dateElement = document.getElementById("currentDate");
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+  dateElement.textContent = new Date().toLocaleDateString("es-CL", options);
+</script>
+{% endblock %}

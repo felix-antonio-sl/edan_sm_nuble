@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env
+
+# Flask
+instance/
+.webassets-cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.docker/
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite3
+original/EDAN Salud Mental.md
+original/Page 0001.jpg
+original/Page 0002.jpg
+original/Page 0003.jpg
+original/Page 0004.jpg
+original/Page 0005.jpg
+original/Page 0006.jpg

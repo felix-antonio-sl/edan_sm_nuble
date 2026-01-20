@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% block title %}Evaluación Completada{% endblock %}
+{% block content %}
+<div class="confirmacion-container">
+  <div class="confirmacion-card">
+    <div class="confirmacion-icon">
+      <span class="icon-circle">✓</span>
+    </div>
+
+    <h1 class="confirmacion-title">¡Evaluación Completada!</h1>
+
+    <p class="confirmacion-message">
+      La evaluación EDAN de Salud Mental ha sido registrada exitosamente.
+    </p>
+
+    <div class="confirmacion-details">
+      <div class="detail-row">
+        <span class="detail-label">Folio:</span>
+        <span class="detail-value detail-folio"
+          >{{ formulario.id[:8]|upper }}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Evaluador:</span>
+        <span class="detail-value">{{ evaluador.nombre_completo() }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">RUN:</span>
+        <span class="detail-value">{{ evaluador.run }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Establecimiento:</span>
+        <span class="detail-value">{{ evaluador.establecimiento }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Fecha:</span>
+        <span class="detail-value"
+          >{{ formulario.updated_at.strftime('%d/%m/%Y %H:%M') }}</span
+        >
+      </div>
+    </div>
+
+    <div class="confirmacion-note">
+      <p>
+        <strong>📌 Importante:</strong> Guarde el número de folio para futuras
+        consultas. Esta información será consolidada por el equipo del Servicio
+        de Salud Ñuble.
+      </p>
+    </div>
+
+    <div class="confirmacion-actions">
+      <a
+        href="{{ url_for('formulario.index') }}"
+        class="btn btn-primary btn-lg"
+      >
+        <span class="btn-icon">+</span>
+        Nueva Evaluación
+      </a>
+    </div>
+  </div>
+
+  <!-- Agradecimiento institucional -->
+  <div class="agradecimiento">
+    <p>
+      Gracias por contribuir a la evaluación de la situación de salud mental en
+      la Región de Ñuble durante la emergencia por incendios 2026.
+    </p>
+    <div class="instituciones">
+      <span>Gobierno Regional de Ñuble</span>
+      <span class="separator">•</span>
+      <span>Servicio de Salud Ñuble</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

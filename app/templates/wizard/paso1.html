@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Paso {{ paso_actual }} - Datos Generales{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-steps">
+            {% for i in range(1, total_pasos + 1) %}
+                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                    <div class="step-number">{{ i }}</div>
+                    <div class="step-label">
+                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                    </div>
+                </div>
+                {% if i < total_pasos %}
+                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Contenido del paso -->
+    <div class="wizard-content">
+        <div class="wizard-header">
+            <span class="step-badge">Paso {{ paso_actual }} de {{ total_pasos }}</span>
+            <h2 class="wizard-title">Datos Generales del Evento</h2>
+            <p class="wizard-description">
+                Información sobre el informe, ubicación y características del suceso.
+            </p>
+        </div>
+
+        <form action="{{ url_for('formulario.paso', num=paso_actual) }}" method="POST" class="wizard-form">
+            <!-- Datos del informe -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">📄</span>
+                    Datos del Informe
+                </legend>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nivel_aplicacion" class="form-label">Nivel de Aplicación</label>
+                        <select id="nivel_aplicacion" name="nivel_aplicacion" class="form-select">
+                            <option value="">Seleccione...</option>
+                            <option value="comunal" {% if formulario.nivel_aplicacion == 'comunal' %}selected{% endif %}>Comunal</option>
+                            <option value="provincial" {% if formulario.nivel_aplicacion == 'provincial' %}selected{% endif %}>Provincial</option>
+                            <option value="regional" {% if formulario.nivel_aplicacion == 'regional' %}selected{% endif %}>Regional</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_informe" class="form-label">Fecha del Informe</label>
+                        <input type="date" id="fecha_informe" name="fecha_informe" class="form-input"
+                               value="{{ formulario.fecha_informe or '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsable" class="form-label">Responsable del Informe</label>
+                        <input type="text" id="responsable" name="responsable" class="form-input"
+                               value="{{ formulario.responsable or '' }}" 
+                               placeholder="Nombre del responsable">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cargo_funcion" class="form-label">Cargo / Función</label>
+                        <input type="text" id="cargo_funcion" name="cargo_funcion" class="form-input"
+                               value="{{ formulario.cargo_funcion or '' }}"
+                               placeholder="Cargo o función">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="institucion" class="form-label">Institución</label>
+                        <input type="text" id="institucion" name="institucion" class="form-input"
+                               value="{{ formulario.institucion or '' }}"
+                               placeholder="Nombre de la institución">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="poblacion_estimada" class="form-label">Población Total Estimada</label>
+                        <input type="number" id="poblacion_estimada" name="poblacion_estimada" class="form-input"
+                               value="{{ formulario.poblacion_estimada or '' }}"
+                               placeholder="Número de personas" min="0">
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Ubicación -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">📍</span>
+                    Ubicación
+                </legend>
+                
+                <div class="form-grid form-grid-3">
+                    <div class="form-group">
+                        <label for="comuna" class="form-label">Comuna</label>
+                        <select id="comuna" name="comuna" class="form-select">
+                            <option value="">Seleccione comuna...</option>
+                            {% for comuna in comunas %}
+                                <option value="{{ comuna }}" {% if formulario.comuna == comuna %}selected{% endif %}>{{ comuna }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="provincia" class="form-label">Provincia</label>
+                        <select id="provincia" name="provincia" class="form-select">
+                            <option value="">Seleccione...</option>
+                            <option value="Diguillín" {% if formulario.provincia == 'Diguillín' %}selected{% endif %}>Diguillín</option>
+                            <option value="Itata" {% if formulario.provincia == 'Itata' %}selected{% endif %}>Itata</option>
+                            <option value="Punilla" {% if formulario.provincia == 'Punilla' %}selected{% endif %}>Punilla</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="region" class="form-label">Región</label>
+                        <input type="text" id="region" name="region" class="form-input" 
+                               value="Ñuble" readonly disabled>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Evento -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">⚠️</span>
+                    Información del Suceso
+                </legend>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fecha_suceso" class="form-label">Fecha del Suceso</label>
+                        <input type="date" id="fecha_suceso" name="fecha_suceso" class="form-input"
+                               value="{{ formulario.fecha_suceso or '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo_suceso" class="form-label">Tipo de Suceso</label>
+                        <select id="tipo_suceso" name="tipo_suceso" class="form-select">
+                            <option value="">Seleccione...</option>
+                            <option value="Incendio forestal" {% if formulario.tipo_suceso == 'Incendio forestal' %}selected{% endif %}>Incendio forestal</option>
+                            <option value="Incendio estructural" {% if formulario.tipo_suceso == 'Incendio estructural' %}selected{% endif %}>Incendio estructural</option>
+                            <option value="Inundación" {% if formulario.tipo_suceso == 'Inundación' %}selected{% endif %}>Inundación</option>
+                            <option value="Terremoto" {% if formulario.tipo_suceso == 'Terremoto' %}selected{% endif %}>Terremoto</option>
+                            <option value="Aluvión" {% if formulario.tipo_suceso == 'Aluvión' %}selected{% endif %}>Aluvión</option>
+                            <option value="Otro" {% if formulario.tipo_suceso == 'Otro' %}selected{% endif %}>Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label for="principales_danos" class="form-label">Principales Daños Detectados</label>
+                        <textarea id="principales_danos" name="principales_danos" class="form-textarea" rows="3"
+                                  placeholder="Describa los principales daños (infraestructura, anegamiento, corte de caminos, etc.)">{{ formulario.principales_danos or '' }}</textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="wizard-nav">
+                <div class="nav-left">
+                    <!-- No hay botón anterior en el paso 1 -->
+                </div>
+                <div class="nav-right">
+                    <button type="submit" name="accion" value="siguiente" class="btn btn-primary">
+                        Siguiente
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mapaComunas = {{ mapa_comunas|safe }};
+    const comunaSelect = document.getElementById('comuna');
+    const provinciaSelect = document.getElementById('provincia');
+
+    if (comunaSelect && provinciaSelect) {
+        comunaSelect.addEventListener('change', function() {
+            const comunaSeleccionada = this.value;
+            const provincia = mapaComunas[comunaSeleccionada];
+            
+            if (provincia) {
+                provinciaSelect.value = provincia;
+                // Opcional: Visual feedback
+                provinciaSelect.classList.add('highlight-update');
+                setTimeout(() => provinciaSelect.classList.remove('highlight-update'), 1000);
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.highlight-update {
+    border-color: #2563eb !important;
+    background-color: #eff6ff !important;
+    transition: all 0.3s ease;
+}
+</style>
+{% endblock %}

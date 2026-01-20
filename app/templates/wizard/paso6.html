@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Paso {{ paso_actual }} - Síntesis y Acciones{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-steps">
+            {% for i in range(1, total_pasos + 1) %}
+                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                    <div class="step-number">{{ i }}</div>
+                    <div class="step-label">
+                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                    </div>
+                </div>
+                {% if i < total_pasos %}
+                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Contenido del paso -->
+    <div class="wizard-content">
+        <div class="wizard-header">
+            <span class="step-badge step-badge-final">Paso {{ paso_actual }} de {{ total_pasos }}</span>
+            <h2 class="wizard-title">Síntesis y Acciones</h2>
+            <p class="wizard-description">
+                Resumen de necesidades prioritarias y acciones a realizar.
+            </p>
+        </div>
+
+        <form action="{{ url_for('formulario.paso', num=paso_actual) }}" method="POST" class="wizard-form">
+            <!-- Síntesis -->
+            <fieldset class="form-fieldset fieldset-highlight">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">📊</span>
+                    Síntesis
+                </legend>
+                
+                <div class="form-group form-group-full">
+                    <label for="sintesis_necesidades" class="form-label">
+                        Síntesis de Necesidades Prioritarias
+                    </label>
+                    <div class="form-hint">Describa las necesidades más urgentes identificadas durante la evaluación.</div>
+                    <textarea id="sintesis_necesidades" name="sintesis_necesidades" 
+                              class="form-textarea form-textarea-lg" rows="5" required
+                              placeholder="Escriba aquí la síntesis de necesidades...">{{ formulario.sintesis_necesidades or '' }}</textarea>
+                </div>
+            </fieldset>
+
+            <!-- Acciones -->
+            <fieldset class="form-fieldset fieldset-highlight">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">✅</span>
+                    Acciones
+                </legend>
+                
+                <div class="form-group form-group-full">
+                    <label for="acciones_realizar" class="form-label">
+                        Acciones por Realizar
+                    </label>
+                    <div class="form-hint">Liste las acciones inmediatas a implementar o coordinar.</div>
+                    <textarea id="acciones_realizar" name="acciones_realizar" 
+                              class="form-textarea form-textarea-lg" rows="5" required
+                              placeholder="Escriba aquí las acciones a realizar...">{{ formulario.acciones_realizar or '' }}</textarea>
+                </div>
+            </fieldset>
+
+            <!-- Datos Evaluador (Lectura) -->
+            <div class="summary-card">
+                <div class="summary-title">
+                    <span class="summary-icon">👤</span>
+                    Datos del Evaluador
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Nombre</span>
+                        <span class="summary-value">{{ evaluador.nombre }} {{ evaluador.apellido1 }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">RUN</span>
+                        <span class="summary-value">{{ evaluador.run }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Establecimiento</span>
+                        <span class="summary-value">{{ evaluador.establecimiento }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegación -->
+            <div class="wizard-nav">
+                <div class="nav-left">
+                    <button type="submit" name="accion" value="anterior" class="btn btn-secondary">
+                        <span class="btn-arrow">←</span>
+                        Anterior
+                    </button>
+                </div>
+                <div class="nav-right">
+                    <button type="submit" name="accion" value="finalizar" class="btn btn-success btn-lg">
+                        Finalizar Informe
+                        <span class="btn-icon">✓</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

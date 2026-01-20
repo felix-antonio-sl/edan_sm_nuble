@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Paso {{ paso_actual }} - Factores de Riesgo{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-steps">
+            {% for i in range(1, total_pasos + 1) %}
+                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                    <div class="step-number">{{ i }}</div>
+                    <div class="step-label">
+                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                    </div>
+                </div>
+                {% if i < total_pasos %}
+                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Contenido del paso -->
+    <div class="wizard-content">
+        <div class="wizard-header">
+            <span class="step-badge">Paso {{ paso_actual }} de {{ total_pasos }}</span>
+            <h2 class="wizard-title">Factores de Riesgo</h2>
+            <p class="wizard-description">
+                Evaluación cualitativa de factores de riesgo asociados al evento.
+            </p>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="legend-bar">
+            <span class="legend-title">Escala de evaluación:</span>
+            <div class="legend-items">
+                <span class="legend-item legend-g">G = Grave</span>
+                <span class="legend-item legend-m">M = Medio</span>
+                <span class="legend-item legend-b">B = Bajo</span>
+                <span class="legend-item legend-ne">NE = No Existe</span>
+            </div>
+        </div>
+
+        <form action="{{ url_for('formulario.paso', num=paso_actual) }}" method="POST" class="wizard-form">
+            <div class="factors-table">
+                <div class="factors-header">
+                    <div class="factor-cell factor-num">#</div>
+                    <div class="factor-cell factor-desc">Factor de Riesgo</div>
+                    <div class="factor-cell factor-option">G</div>
+                    <div class="factor-cell factor-option">M</div>
+                    <div class="factor-cell factor-option">B</div>
+                    <div class="factor-cell factor-option">NE</div>
+                </div>
+
+                {% for num, descripcion in factores %}
+                    <div class="factors-row">
+                        <div class="factor-cell factor-num">{{ num }}</div>
+                        <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                        {% for valor in ['G', 'M', 'B', 'NE'] %}
+                            <div class="factor-cell factor-option">
+                                <input type="radio" 
+                                       id="factor_{{ num }}_{{ valor }}" 
+                                       name="factor_{{ num }}" 
+                                       value="{{ valor }}"
+                                       class="radio-hidden"
+                                       {% if formulario.factores_riesgo and formulario.factores_riesgo.get(num|string) == valor %}checked{% endif %}>
+                                <label for="factor_{{ num }}_{{ valor }}" class="radio-label radio-{{ valor|lower }}">
+                                    {{ valor }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Navegación -->
+            <div class="wizard-nav">
+                <div class="nav-left">
+                    <button type="submit" name="accion" value="anterior" class="btn btn-secondary">
+                        <span class="btn-arrow">←</span>
+                        Anterior
+                    </button>
+                </div>
+                <div class="nav-right">
+                    <button type="submit" name="accion" value="siguiente" class="btn btn-primary">
+                        Siguiente
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

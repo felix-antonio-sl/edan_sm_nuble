@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Paso {{ paso_actual }} - Necesidades{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-steps">
+            {% for i in range(1, total_pasos + 1) %}
+                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                    <div class="step-number">{{ i }}</div>
+                    <div class="step-label">
+                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                    </div>
+                </div>
+                {% if i < total_pasos %}
+                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Contenido del paso -->
+    <div class="wizard-content">
+        <div class="wizard-header">
+            <span class="step-badge">Paso {{ paso_actual }} de {{ total_pasos }}</span>
+            <h2 class="wizard-title">Listado de Necesidades</h2>
+            <p class="wizard-description">
+                Identificación del estado de necesidades psicosociales, institucionales y básicas.
+            </p>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="legend-bar">
+            <span class="legend-title">Estado de la necesidad:</span>
+            <div class="legend-items">
+                <span class="legend-item legend-r">R = Resuelto</span>
+                <span class="legend-item legend-nr">NR = No Resuelto</span>
+            </div>
+        </div>
+
+        <form action="{{ url_for('formulario.paso', num=paso_actual) }}" method="POST" class="wizard-form">
+            <!-- Necesidades Psicosociales -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">🧠</span>
+                    Necesidades Psicosociales
+                </legend>
+                
+                <div class="factors-table">
+                    <div class="factors-header factors-header-simple">
+                        <div class="factor-cell factor-num">#</div>
+                        <div class="factor-cell factor-desc">Necesidad</div>
+                        <div class="factor-cell factor-option-wide">R</div>
+                        <div class="factor-cell factor-option-wide">NR</div>
+                    </div>
+
+                    {% for num, descripcion in necesidades_psicosociales %}
+                        <div class="factors-row">
+                            <div class="factor-cell factor-num">{{ num }}</div>
+                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_r" 
+                                       name="necesidad_{{ num }}" 
+                                       value="R"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_psicosociales and formulario.necesidades_psicosociales.get(num|string) == 'R' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                            </div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_nr" 
+                                       name="necesidad_{{ num }}" 
+                                       value="NR"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_psicosociales and formulario.necesidades_psicosociales.get(num|string) == 'NR' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <!-- Necesidades Institucionales -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">🏛️</span>
+                    Necesidades Institucionales
+                </legend>
+                
+                <div class="factors-table">
+                    <div class="factors-header factors-header-simple">
+                        <div class="factor-cell factor-num">#</div>
+                        <div class="factor-cell factor-desc">Necesidad</div>
+                        <div class="factor-cell factor-option-wide">R</div>
+                        <div class="factor-cell factor-option-wide">NR</div>
+                    </div>
+
+                    {% for num, descripcion in necesidades_institucionales %}
+                        <div class="factors-row">
+                            <div class="factor-cell factor-num">{{ num }}</div>
+                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_r" 
+                                       name="necesidad_{{ num }}" 
+                                       value="R"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_institucionales and formulario.necesidades_institucionales.get(num|string) == 'R' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                            </div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_nr" 
+                                       name="necesidad_{{ num }}" 
+                                       value="NR"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_institucionales and formulario.necesidades_institucionales.get(num|string) == 'NR' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <!-- Necesidades Básicas -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">🏠</span>
+                    Necesidades Básicas
+                </legend>
+                
+                <div class="factors-table">
+                    <div class="factors-header factors-header-simple">
+                        <div class="factor-cell factor-num">#</div>
+                        <div class="factor-cell factor-desc">Necesidad</div>
+                        <div class="factor-cell factor-option-wide">R</div>
+                        <div class="factor-cell factor-option-wide">NR</div>
+                    </div>
+
+                    {% for num, descripcion in necesidades_basicas %}
+                        <div class="factors-row">
+                            <div class="factor-cell factor-num">{{ num }}</div>
+                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_r" 
+                                       name="necesidad_{{ num }}" 
+                                       value="R"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_basicas and formulario.necesidades_basicas.get(num|string) == 'R' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                            </div>
+                            <div class="factor-cell factor-option-wide">
+                                <input type="radio" 
+                                       id="necesidad_{{ num }}_nr" 
+                                       name="necesidad_{{ num }}" 
+                                       value="NR"
+                                       class="radio-hidden"
+                                       {% if formulario.necesidades_basicas and formulario.necesidades_basicas.get(num|string) == 'NR' %}checked{% endif %}>
+                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <!-- Comentarios -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">💬</span>
+                    Comentarios
+                </legend>
+                
+                <div class="form-group form-group-full">
+                    <label for="comentarios_necesidades" class="form-label">
+                        Comentarios sobre el grado de satisfacción de las necesidades básicas
+                    </label>
+                    <textarea id="comentarios_necesidades" name="comentarios_necesidades" 
+                              class="form-textarea" rows="3"
+                              placeholder="Describa el nivel de satisfacción de las necesidades...">{{ formulario.comentarios_necesidades or '' }}</textarea>
+                </div>
+            </fieldset>
+
+            <!-- Navegación -->
+            <div class="wizard-nav">
+                <div class="nav-left">
+                    <button type="submit" name="accion" value="anterior" class="btn btn-secondary">
+                        <span class="btn-arrow">←</span>
+                        Anterior
+                    </button>
+                </div>
+                <div class="nav-right">
+                    <button type="submit" name="accion" value="siguiente" class="btn btn-primary">
+                        Siguiente
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Paso {{ paso_actual }} - Factores Protectores{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Barra de progreso -->
+    <div class="progress-bar">
+        <div class="progress-steps">
+            {% for i in range(1, total_pasos + 1) %}
+                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                    <div class="step-number">{{ i }}</div>
+                    <div class="step-label">
+                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                    </div>
+                </div>
+                {% if i < total_pasos %}
+                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Contenido del paso -->
+    <div class="wizard-content">
+        <div class="wizard-header">
+            <span class="step-badge">Paso {{ paso_actual }} de {{ total_pasos }}</span>
+            <h2 class="wizard-title">Factores Protectores</h2>
+            <p class="wizard-description">
+                Identificación de factores que pueden mitigar el impacto en salud mental.
+            </p>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="legend-bar legend-simple">
+            <span class="legend-title">Indique si existe o no existe:</span>
+            <div class="legend-items">
+                <span class="legend-item legend-si">SÍ = Existe</span>
+                <span class="legend-item legend-no">NO = No Existe</span>
+            </div>
+        </div>
+
+        <form action="{{ url_for('formulario.paso', num=paso_actual) }}" method="POST" class="wizard-form">
+            <div class="factors-table">
+                <div class="factors-header factors-header-simple">
+                    <div class="factor-cell factor-num">#</div>
+                    <div class="factor-cell factor-desc">Factor Protector</div>
+                    <div class="factor-cell factor-option-wide">SÍ</div>
+                    <div class="factor-cell factor-option-wide">NO</div>
+                </div>
+
+                {% for num, descripcion in factores %}
+                    <div class="factors-row">
+                        <div class="factor-cell factor-num">{{ num }}</div>
+                        <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                        <div class="factor-cell factor-option-wide">
+                            <input type="radio" 
+                                   id="factor_{{ num }}_si" 
+                                   name="factor_{{ num }}" 
+                                   value="si"
+                                   class="radio-hidden"
+                                   {% if formulario.factores_protectores and formulario.factores_protectores.get(num|string) == true %}checked{% endif %}>
+                            <label for="factor_{{ num }}_si" class="radio-label radio-si">SÍ</label>
+                        </div>
+                        <div class="factor-cell factor-option-wide">
+                            <input type="radio" 
+                                   id="factor_{{ num }}_no" 
+                                   name="factor_{{ num }}" 
+                                   value="no"
+                                   class="radio-hidden"
+                                   {% if formulario.factores_protectores and formulario.factores_protectores.get(num|string) == false %}checked{% endif %}>
+                            <label for="factor_{{ num }}_no" class="radio-label radio-no">NO</label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Comentarios -->
+            <fieldset class="form-fieldset">
+                <legend class="fieldset-legend">
+                    <span class="legend-icon">💬</span>
+                    Comentarios
+                </legend>
+                
+                <div class="form-grid">
+                    <div class="form-group form-group-full">
+                        <label for="comentarios_informacion" class="form-label">
+                            Información que está recibiendo la población
+                        </label>
+                        <textarea id="comentarios_informacion" name="comentarios_informacion" 
+                                  class="form-textarea" rows="3"
+                                  placeholder="Medios de comunicación masiva, medios oficiales, informaciones locales, rumores, etc.">{{ formulario.comentarios_informacion or '' }}</textarea>
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label for="otras_consideraciones" class="form-label">
+                            Otras Consideraciones
+                        </label>
+                        <textarea id="otras_consideraciones" name="otras_consideraciones" 
+                                  class="form-textarea" rows="3"
+                                  placeholder="Información adicional relevante...">{{ formulario.otras_consideraciones or '' }}</textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Navegación -->
+            <div class="wizard-nav">
+                <div class="nav-left">
+                    <button type="submit" name="accion" value="anterior" class="btn btn-secondary">
+                        <span class="btn-arrow">←</span>
+                        Anterior
+                    </button>
+                </div>
+                <div class="nav-right">
+                    <button type="submit" name="accion" value="siguiente" class="btn btn-primary">
+                        Siguiente
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

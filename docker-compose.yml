@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-edan}:${POSTGRES_PASSWORD:-edan_secret}@db:5432/${POSTGRES_DB:-edan_db}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-edan}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-edan_secret}
+      - POSTGRES_DB=${POSTGRES_DB:-edan_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Puerto interno solo - no expuesto al host
+    # ports:
+    #   - "5433:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-edan} -d ${POSTGRES_DB:-edan_db}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
