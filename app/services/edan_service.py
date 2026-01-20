@@ -55,6 +55,8 @@ class EdanService:
         db.session.commit()
         return formulario
 
+    @staticmethod
+    def get_formulario(formulario_id: str) -> Optional[FormularioEDAN]:
         """Obtiene un formulario por ID."""
         return db.session.get(FormularioEDAN, formulario_id)
 
