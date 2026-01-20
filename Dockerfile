@@ -12,11 +12,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código de la aplicación
+# Crear usuario no privilegiado
+RUN useradd -m -u 1000 edan
+
+# Copiar código de la aplicación y ajustar permisos
 COPY . .
+RUN chown -R edan:edan /app
+
+# Cambiar al usuario edan
+USER edan
 
 # Exponer puerto
 EXPOSE 5000
 
 # Comando para producción con Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:create_app()"]
+# Aumentamos timeout a 120s para evitar cortes prematuros
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "app:create_app()"]

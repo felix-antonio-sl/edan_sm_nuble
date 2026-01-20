@@ -5,21 +5,7 @@
 {% block content %}
 <div class="wizard-container">
     <!-- Barra de progreso -->
-    <div class="progress-bar">
-        <div class="progress-steps">
-            {% for i in range(1, total_pasos + 1) %}
-                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
-                    <div class="step-number">{{ i }}</div>
-                    <div class="step-label">
-                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
-                    </div>
-                </div>
-                {% if i < total_pasos %}
-                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
+    {% include "components/progress_bar.html" %}
 
     <!-- Contenido del paso -->
     <div class="wizard-content">
@@ -56,27 +42,27 @@
                         <div class="factor-cell factor-option-wide">NR</div>
                     </div>
 
-                    {% for num, descripcion in necesidades_psicosociales %}
+                    {% for item in necesidades_psicosociales %}
                         <div class="factors-row">
-                            <div class="factor-cell factor-num">{{ num }}</div>
-                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-num">{{ item.orden }}</div>
+                            <div class="factor-cell factor-desc">{{ item.descripcion }}</div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_r" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_r" 
+                                       name="item_{{ item.codigo }}" 
                                        value="R"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_psicosociales and formulario.necesidades_psicosociales.get(num|string) == 'R' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                                       {% if respuestas.get(item.codigo) == 'R' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_r" class="radio-label radio-r">R</label>
                             </div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_nr" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_nr" 
+                                       name="item_{{ item.codigo }}" 
                                        value="NR"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_psicosociales and formulario.necesidades_psicosociales.get(num|string) == 'NR' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                                       {% if respuestas.get(item.codigo) == 'NR' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_nr" class="radio-label radio-nr">NR</label>
                             </div>
                         </div>
                     {% endfor %}
@@ -98,27 +84,27 @@
                         <div class="factor-cell factor-option-wide">NR</div>
                     </div>
 
-                    {% for num, descripcion in necesidades_institucionales %}
+                    {% for item in necesidades_institucionales %}
                         <div class="factors-row">
-                            <div class="factor-cell factor-num">{{ num }}</div>
-                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-num">{{ item.orden }}</div>
+                            <div class="factor-cell factor-desc">{{ item.descripcion }}</div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_r" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_r" 
+                                       name="item_{{ item.codigo }}" 
                                        value="R"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_institucionales and formulario.necesidades_institucionales.get(num|string) == 'R' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                                       {% if respuestas.get(item.codigo) == 'R' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_r" class="radio-label radio-r">R</label>
                             </div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_nr" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_nr" 
+                                       name="item_{{ item.codigo }}" 
                                        value="NR"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_institucionales and formulario.necesidades_institucionales.get(num|string) == 'NR' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                                       {% if respuestas.get(item.codigo) == 'NR' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_nr" class="radio-label radio-nr">NR</label>
                             </div>
                         </div>
                     {% endfor %}
@@ -140,27 +126,27 @@
                         <div class="factor-cell factor-option-wide">NR</div>
                     </div>
 
-                    {% for num, descripcion in necesidades_basicas %}
+                    {% for item in necesidades_basicas %}
                         <div class="factors-row">
-                            <div class="factor-cell factor-num">{{ num }}</div>
-                            <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                            <div class="factor-cell factor-num">{{ item.orden }}</div>
+                            <div class="factor-cell factor-desc">{{ item.descripcion }}</div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_r" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_r" 
+                                       name="item_{{ item.codigo }}" 
                                        value="R"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_basicas and formulario.necesidades_basicas.get(num|string) == 'R' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_r" class="radio-label radio-r">R</label>
+                                       {% if respuestas.get(item.codigo) == 'R' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_r" class="radio-label radio-r">R</label>
                             </div>
                             <div class="factor-cell factor-option-wide">
                                 <input type="radio" 
-                                       id="necesidad_{{ num }}_nr" 
-                                       name="necesidad_{{ num }}" 
+                                       id="item_{{ item.codigo }}_nr" 
+                                       name="item_{{ item.codigo }}" 
                                        value="NR"
                                        class="radio-hidden"
-                                       {% if formulario.necesidades_basicas and formulario.necesidades_basicas.get(num|string) == 'NR' %}checked{% endif %}>
-                                <label for="necesidad_{{ num }}_nr" class="radio-label radio-nr">NR</label>
+                                       {% if respuestas.get(item.codigo) == 'NR' %}checked{% endif %}>
+                                <label for="item_{{ item.codigo }}_nr" class="radio-label radio-nr">NR</label>
                             </div>
                         </div>
                     {% endfor %}

@@ -1,0 +1,20 @@
+{#
+  Componente: Barra de Progreso del Wizard
+  Uso: {% include "components/progress_bar.html" %}
+  Requiere: paso_actual, total_pasos (enteros)
+#}
+<div class="progress-bar">
+    <div class="progress-steps">
+        {% for i in range(1, total_pasos + 1) %}
+            <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
+                <div class="step-number">{{ i }}</div>
+                <div class="step-label">
+                    {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
+                </div>
+            </div>
+            {% if i < total_pasos %}
+                <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,26 @@
+"""
+Constantes del instrumento EDAN.
+"""
+
+from app.constants.factores import FACTORES_RIESGO, FACTORES_PROTECTORES
+from app.constants.recursos import (
+    RECURSOS_HUMANOS,
+    RECURSOS_MATERIALES,
+    RECURSOS_ECONOMICOS,
+)
+from app.constants.necesidades import (
+    NECESIDADES_PSICOSOCIALES,
+    NECESIDADES_INSTITUCIONALES,
+    NECESIDADES_BASICAS,
+)
+
+__all__ = [
+    "FACTORES_RIESGO",
+    "FACTORES_PROTECTORES",
+    "RECURSOS_HUMANOS",
+    "RECURSOS_MATERIALES",
+    "RECURSOS_ECONOMICOS",
+    "NECESIDADES_PSICOSOCIALES",
+    "NECESIDADES_INSTITUCIONALES",
+    "NECESIDADES_BASICAS",
+]

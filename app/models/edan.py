@@ -13,7 +13,7 @@ class Evaluador(db.Model):
     __tablename__ = "evaluadores"
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    run = db.Column(db.String(12), nullable=False)  # RUN chileno (ej: 12.345.678-9)
+    run = db.Column(db.String(12), nullable=False, unique=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido1 = db.Column(db.String(100), nullable=False)
     apellido2 = db.Column(db.String(100), nullable=True)
@@ -29,9 +29,17 @@ class Evaluador(db.Model):
             return f"{self.nombre} {self.apellido1} {self.apellido2}"
         return f"{self.nombre} {self.apellido1}"
 
+    def __repr__(self):
+        return f"<Evaluador {self.run}: {self.nombre_completo()}>"
+
 
 class FormularioEDAN(db.Model):
-    """Formulario EDAN de Salud Mental."""
+    """
+    Formulario EDAN de Salud Mental.
+
+    Los datos de pasos 2-5 (factores, recursos, necesidades) se almacenan
+    en la tabla `respuestas_edan` de forma normalizada.
+    """
 
     __tablename__ = "formularios_edan"
 
@@ -48,7 +56,7 @@ class FormularioEDAN(db.Model):
     estado = db.Column(db.String(20), default="borrador")  # borrador, completado
     paso_actual = db.Column(db.Integer, default=1)
 
-    # === DATOS GENERALES ===
+    # === PASO 1: DATOS GENERALES ===
     nivel_aplicacion = db.Column(db.String(50), nullable=True)
     fecha_informe = db.Column(db.Date, nullable=True)
     hora_informe = db.Column(db.Time, nullable=True)
@@ -67,41 +75,34 @@ class FormularioEDAN(db.Model):
     tipo_suceso = db.Column(db.String(200), nullable=True)
     principales_danos = db.Column(db.Text, nullable=True)
 
-    # === SECCIÓN 1: FACTORES DE RIESGO (JSONB) ===
-    # Formato: {"1": "G", "2": "M", ...} donde G=Grave, M=Medio, B=Bajo, NE=No Existe
-    factores_riesgo = db.Column(db.JSON, default=dict)
-
-    # === SECCIÓN 2: FACTORES PROTECTORES (JSONB) ===
-    # Formato: {"29": true, "30": false, ...}
-    factores_protectores = db.Column(db.JSON, default=dict)
+    # === PASO 3: COMENTARIOS FACTORES PROTECTORES ===
     comentarios_informacion = db.Column(db.Text, nullable=True)
     otras_consideraciones = db.Column(db.Text, nullable=True)
 
-    # === SECCIÓN 3: RECURSOS ===
-    # Humanos: {"40": 5, "41": 3, ...} (cantidades)
-    recursos_humanos = db.Column(db.JSON, default=dict)
-    # Materiales: {"50": true, "51": false, ...}
-    recursos_materiales = db.Column(db.JSON, default=dict)
-    # Económicos: {"55": true}
-    recursos_economicos = db.Column(db.JSON, default=dict)
-
-    # === SECCIÓN 4: NECESIDADES ===
-    # Formato: {"56": "R", "57": "NR", ...} donde R=Resuelto, NR=No Resuelto
-    necesidades_psicosociales = db.Column(db.JSON, default=dict)
-    necesidades_institucionales = db.Column(db.JSON, default=dict)
-    necesidades_basicas = db.Column(db.JSON, default=dict)
+    # === PASO 5: COMENTARIOS NECESIDADES ===
     comentarios_necesidades = db.Column(db.Text, nullable=True)
 
-    # === SÍNTESIS ===
+    # === PASO 6: SÍNTESIS ===
     sintesis_necesidades = db.Column(db.Text, nullable=True)
     acciones_realizar = db.Column(db.Text, nullable=True)
+
+    def __repr__(self):
+        return f"<FormularioEDAN {self.id[:8]}... estado={self.estado}>"
 
     def to_dict(self):
         """Convierte el formulario a diccionario."""
         return {
             "id": self.id,
+            "evaluador_id": self.evaluador_id,
             "estado": self.estado,
             "paso_actual": self.paso_actual,
+            "nivel_aplicacion": self.nivel_aplicacion,
+            "fecha_informe": (
+                self.fecha_informe.isoformat() if self.fecha_informe else None
+            ),
+            "comuna": self.comuna,
+            "provincia": self.provincia,
+            "tipo_suceso": self.tipo_suceso,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

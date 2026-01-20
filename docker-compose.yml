@@ -1,10 +1,9 @@
-version: "3.8"
-
 services:
   web:
     build: .
-    ports:
-      - "5001:5000"
+    # En producción NO exponemos puertos al host, solo a través de Traefik
+    # ports:
+    #   - "5001:5000"
     environment:
       - FLASK_APP=app
       - FLASK_ENV=${FLASK_ENV:-production}
@@ -16,6 +15,23 @@ services:
     volumes:
       - ./app:/app/app
     restart: unless-stopped
+    networks:
+      - web
+      - default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      # Router para HTTP (Redirección a HTTPS gestionada por entrypoint web globalmente o aquí explícitamente)
+      - "traefik.http.routers.edan.rule=Host(`edan.138.201.53.205.nip.io`)"
+      - "traefik.http.routers.edan.entrypoints=websecure"
+      - "traefik.http.routers.edan.tls.certresolver=myresolver"
+      # Servicio (apunta al puerto interno del contenedor)
+      - "traefik.http.services.edan.loadbalancer.server.port=5000"
 
   db:
     image: postgres:15-alpine
@@ -25,9 +41,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-edan_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # Puerto interno solo - no expuesto al host
-    # ports:
-    #   - "5433:5432"
+    networks:
+      - default
     healthcheck:
       test:
         [
@@ -38,6 +53,12 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+
+networks:
+  web:
+    external: true
+  default:
+    driver: bridge
 
 volumes:
   postgres_data:

@@ -5,21 +5,7 @@
 {% block content %}
 <div class="wizard-container">
     <!-- Barra de progreso -->
-    <div class="progress-bar">
-        <div class="progress-steps">
-            {% for i in range(1, total_pasos + 1) %}
-                <div class="progress-step {% if i < paso_actual %}completed{% elif i == paso_actual %}active{% endif %}">
-                    <div class="step-number">{{ i }}</div>
-                    <div class="step-label">
-                        {% if i == 1 %}Datos{% elif i == 2 %}Riesgos{% elif i == 3 %}Protectores{% elif i == 4 %}Recursos{% elif i == 5 %}Necesidades{% else %}Síntesis{% endif %}
-                    </div>
-                </div>
-                {% if i < total_pasos %}
-                    <div class="step-connector {% if i < paso_actual %}completed{% endif %}"></div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
+    {% include "components/progress_bar.html" %}
 
     <!-- Contenido del paso -->
     <div class="wizard-content">
@@ -49,27 +35,27 @@
                     <div class="factor-cell factor-option-wide">NO</div>
                 </div>
 
-                {% for num, descripcion in factores %}
+                {% for item in items %}
                     <div class="factors-row">
-                        <div class="factor-cell factor-num">{{ num }}</div>
-                        <div class="factor-cell factor-desc">{{ descripcion }}</div>
+                        <div class="factor-cell factor-num">{{ item.orden }}</div>
+                        <div class="factor-cell factor-desc">{{ item.descripcion }}</div>
                         <div class="factor-cell factor-option-wide">
                             <input type="radio" 
-                                   id="factor_{{ num }}_si" 
-                                   name="factor_{{ num }}" 
+                                   id="item_{{ item.codigo }}_si" 
+                                   name="item_{{ item.codigo }}" 
                                    value="si"
                                    class="radio-hidden"
-                                   {% if formulario.factores_protectores and formulario.factores_protectores.get(num|string) == true %}checked{% endif %}>
-                            <label for="factor_{{ num }}_si" class="radio-label radio-si">SÍ</label>
+                                   {% if respuestas.get(item.codigo) == true %}checked{% endif %}>
+                            <label for="item_{{ item.codigo }}_si" class="radio-label radio-si">SÍ</label>
                         </div>
                         <div class="factor-cell factor-option-wide">
                             <input type="radio" 
-                                   id="factor_{{ num }}_no" 
-                                   name="factor_{{ num }}" 
+                                   id="item_{{ item.codigo }}_no" 
+                                   name="item_{{ item.codigo }}" 
                                    value="no"
                                    class="radio-hidden"
-                                   {% if formulario.factores_protectores and formulario.factores_protectores.get(num|string) == false %}checked{% endif %}>
-                            <label for="factor_{{ num }}_no" class="radio-label radio-no">NO</label>
+                                   {% if respuestas.get(item.codigo) == false %}checked{% endif %}>
+                            <label for="item_{{ item.codigo }}_no" class="radio-label radio-no">NO</label>
                         </div>
                     </div>
                 {% endfor %}
