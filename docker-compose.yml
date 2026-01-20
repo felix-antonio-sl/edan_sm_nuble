@@ -72,7 +72,7 @@ services:
       - default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`dashboard.edan.serviciodesaludnuble.cl`)"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.serviciodesaludnuble.cl`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
       - "traefik.http.services.dashboard.loadbalancer.server.port=8501"
