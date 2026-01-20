@@ -1162,9 +1162,11 @@ body {
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
+  /* Global adjustments */
   .header-container {
     flex-direction: column;
     text-align: center;
+    gap: var(--spacing-sm);
   }
 
   .header-logos {
@@ -1172,64 +1174,105 @@ body {
     gap: var(--spacing-sm);
   }
 
-  .header-divider {
-    width: 60px;
-    height: 1px;
-  }
-
-  .form-grid {
+  /* Form Layout */
+  .form-grid,
+  .form-grid-3,
+  .info-cards,
+  .summary-grid {
     grid-template-columns: 1fr;
   }
-
-  .form-grid-3 {
-    grid-template-columns: 1fr;
+  
+  .wizard-form, .wizard-header {
+      padding: var(--spacing-md);
   }
 
-  .info-cards {
-    grid-template-columns: 1fr;
-  }
-
+  /* Progress Steps - simplified for mobile */
   .progress-steps {
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
+  }
+  
+  .step-label {
+      display: none; /* Hide labels on mobile to save space */
   }
 
   .step-connector {
     display: none;
   }
 
+  /* === CARD VIEW FOR TABLES === */
+  /* Hide standard header */
   .factors-header,
+  .factors-header-simple {
+    display: none;
+  }
+
+  /* Row becomes a card */
   .factors-row {
-    grid-template-columns: 40px 1fr repeat(4, 45px);
-    font-size: var(--font-size-xs);
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-md);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    background: white;
+    gap: var(--spacing-sm);
   }
 
-  .factors-header-simple,
-  .factors-header-simple + .factors-row,
-  .factors-row:has(.factor-option-wide) {
-    grid-template-columns: 40px 1fr repeat(2, 60px);
+  /* Number and description at top */
+  .factor-cell:first-child { /* Number */
+    font-weight: bold;
+    color: var(--primary);
+    width: auto;
+    padding: 0;
+  }
+  
+  .factor-cell:nth-child(2) { /* Description */
+    padding: 0;
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-sm);
   }
 
+  /* Alternatives container */
+  .factors-row {
+      position: relative;
+  }
+  
+  /* Selectors row */
+  .factor-option,
+  .factor-option-wide {
+      display: inline-flex;
+      width: auto;
+      padding: 0;
+  }
+  
+  /* Flex container for options */
+  .factors-row > .factor-option,
+  .factors-row > .factor-option-wide {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: var(--spacing-xs);
+      padding-top: var(--spacing-sm);
+      border-top: 1px dashed var(--gray-200);
+  }
+  
+  /* Ensure radio labels are touch-friendly */
   .radio-label {
-    width: 32px;
-    height: 32px;
-    font-size: var(--font-size-xs);
+    width: 44px;
+    height: 44px; /* Larger touch target */
+    font-size: var(--font-size-base);
   }
 
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-
+  /* Navigation buttons */
   .wizard-nav {
     flex-direction: column;
     gap: var(--spacing-md);
   }
 
   .nav-left,
-  .nav-right {
-    width: 100%;
-  }
-
+  .nav-right,
   .nav-left .btn,
   .nav-right .btn {
     width: 100%;

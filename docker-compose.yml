@@ -27,11 +27,12 @@ services:
     labels:
       - "traefik.enable=true"
       # Router para HTTP (Redirección a HTTPS gestionada por entrypoint web globalmente o aquí explícitamente)
-      - "traefik.http.routers.edan.rule=Host(`edan.138.201.53.205.nip.io`)"
+      - "traefik.http.routers.edan.rule=Host(`edan.serviciodesaludnuble.cl`)"
       - "traefik.http.routers.edan.entrypoints=websecure"
       - "traefik.http.routers.edan.tls.certresolver=myresolver"
       # Servicio (apunta al puerto interno del contenedor)
       - "traefik.http.services.edan.loadbalancer.server.port=5000"
+      - "traefik.docker.network=web"
 
   db:
     image: postgres:15-alpine
@@ -53,6 +54,29 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: edan_dashboard
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-edan}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-edan_secret}
+      - POSTGRES_DB=${POSTGRES_DB:-edan_db}
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.edan.serviciodesaludnuble.cl`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=8501"
+      - "traefik.docker.network=web"
 
 networks:
   web:

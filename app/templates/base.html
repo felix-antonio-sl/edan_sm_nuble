@@ -25,18 +25,13 @@
     <header class="header">
       <div class="header-container">
         <div class="header-logos">
-          <div class="logo-gore">
-            <span class="logo-text">GORE</span>
-            <span class="logo-region">ÑUBLE</span>
-          </div>
-          <div class="header-divider"></div>
+          <!-- GORE Logo removed as per request -->
           <div class="logo-ss">
-            <span class="logo-text-sm">Servicio de Salud</span>
-            <span class="logo-region-sm">Ñuble</span>
+            <img src="{{ url_for('static', filename='img/ssn_logo.jpg') }}" alt="Servicio de Salud Ñuble" style="height: 50px;">
           </div>
         </div>
         <div class="header-context">
-          <span class="context-badge">🔥 Emergencia Incendios 2026</span>
+          <span class="context-badge">🔥 Incendios 2026</span>
         </div>
       </div>
     </header>
@@ -63,10 +58,10 @@
     <footer class="footer">
       <div class="footer-container">
         <p class="footer-text">
-          Colaboración <strong>Gobierno Regional de Ñuble</strong> y
           <strong>Servicio de Salud Ñuble</strong>
         </p>
         <p class="footer-context">Contexto: Incendios Región de Ñuble 2026</p>
+        <p class="footer-dev" style="margin-top: 5px; opacity: 0.5; font-size: 0.7em;">Dev by Félix Sanhueza</p>
       </div>
     </footer>
 
